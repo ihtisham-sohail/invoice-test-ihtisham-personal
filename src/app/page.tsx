@@ -26,7 +26,7 @@ export default function Home() {
   const [totalPaid , setTotalPaid] = useState<number | 0>(0);
   const [totalOwed , setTotalOwed] = useState<number | 0>(0);
   const [totalDiscount , setTotalDiscount] = useState<number | 0>(0);
-  
+
   useEffect(()=>{
     setCustomerData();
   },[userId])
@@ -84,6 +84,13 @@ export default function Home() {
     }
   }
 
+  const totalItems = (items:LineItem[]) =>{
+    const totalCents = items.reduce((acc,item:any)=>acc+(item.price*item.quantity),0);
+    return convertToDollar(totalCents);
+  }
+
+
+
   return (
     <>
       <PageWrapper>
@@ -93,14 +100,15 @@ export default function Home() {
         </GeneralBox>
 
         <GeneralBox>
-          <TableContainer>
+          <TableContainer overflowX="auto" overflowY="auto" maxH="25vh">
             <Table fontSize="sm" variant="striped" colorScheme="gray">
               <Thead>
-                <Tr>
-                  <Th>Invoice #</Th>
-                  <Th>Date Due</Th>
-                  <Th>Date Sent</Th>
-                  <Td></Td>
+                <Tr >
+                  <Th position="sticky" left={0} top={0} zIndex="2" bg="white">Invoice #</Th>
+                  <Th position="sticky" left={0} top={0} zIndex="1" bg="white">Date Due</Th>
+                  <Th position="sticky" left={0} top={0} zIndex="1" bg="white">Date Sent</Th>
+                  <Th position="sticky" left={0} top={0} zIndex="1" bg="white">Amount</Th>
+                  <Td position="sticky" left={0} top={0} zIndex="1" bg="white"></Td>
                 </Tr>
               </Thead>
               <Tbody>
@@ -109,11 +117,15 @@ export default function Home() {
                    id,
                    dateDue,
                    dateIssued,
+                   items,
+                   discount,
+                   settled,
                  }) => (
-                  <Tr key={id}>
-                    <Td>{number}</Td>
-                    <Td>{dateDue.toString()}</Td>
-                    <Td>{dateIssued.toString()}</Td>
+                  <Tr key={id} color={settled ? '':'red'}>
+                    <Td position="sticky" left={0} zIndex="1" bg="white">{number}</Td>
+                    <Td>{dateFormat(dateDue)}</Td>
+                    <Td>{dateFormat(dateIssued)}</Td>
+                    <Td color={discount ? 'green':''}>{totalItems(items)}</Td>
                   </Tr>
                 ))}
               </Tbody>
