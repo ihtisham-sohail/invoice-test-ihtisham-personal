@@ -15,11 +15,37 @@ import {
 import { PageWrapper } from "./components/pageWrapper";
 import { GeneralBox } from "./components/generalBox";
 import { Customer, Invoice , LineItem , convertToDollar , dateFormat } from "@/utils/data-helpers";
+import { fetchCall } from '@/utils/api-helper';
 
 export default function Home() {
   const [userId, setUserId] = useState('5ac51f7e-81b1-49c6-9c39-78b2d171abd6');
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [invoices, setInvoices] = useState<Invoice[] | null>(null);
+  
+  useEffect(()=>{
+    setCustomerData();
+  },[userId])
+
+  const setCustomerData =  ()=>{
+    console.log('Called setting customer');
+  fetchCall(`/api/findCustomer/${userId}`).then(data=>
+    setCustomer(data)
+  );
+  }
+
+  useEffect(()=>{
+    if(customer){
+      console.log('Called setting invoices');
+      fetchCall(`/api/invoices/${userId}`).then(data=>
+        setInvoices(data)
+      );
+    }
+
+  },[customer])
+
+  useEffect(()=>{
+    //calcTotals();
+  },[invoices]);
 
   return (
     <>
