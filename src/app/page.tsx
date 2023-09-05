@@ -21,6 +21,11 @@ export default function Home() {
   const [userId, setUserId] = useState('5ac51f7e-81b1-49c6-9c39-78b2d171abd6');
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [invoices, setInvoices] = useState<Invoice[] | null>(null);
+
+  const [totalAmount , setTotalAmount] = useState<number | 0>(0);
+  const [totalPaid , setTotalPaid] = useState<number | 0>(0);
+  const [totalOwed , setTotalOwed] = useState<number | 0>(0);
+  const [totalDiscount , setTotalDiscount] = useState<number | 0>(0);
   
   useEffect(()=>{
     setCustomerData();
@@ -44,8 +49,40 @@ export default function Home() {
   },[customer])
 
   useEffect(()=>{
-    //calcTotals();
+    calcTotals();
   },[invoices]);
+
+  const calcTotals = () =>{
+    
+    if(invoices?.length){
+      let sumTotal = 0;
+      let redLiner = 0;
+      let totalDis = 0;
+      invoices.map((inv)=>{
+        let rSum = inv.items.reduce((acc,item)=>{
+          return acc+(item.price*item.quantity);
+        },0);
+  
+        
+        // checking discount if given
+        let dis = inv.discount ? inv.discount : 0 ;
+
+        // apply discount to total invoice
+        let afterDisTotal = rSum-dis;
+        sumTotal += afterDisTotal;
+
+        // checking if settled
+        let duePassed = !inv.settled ? afterDisTotal : 0;
+        redLiner += duePassed;
+        totalDis +=dis;
+      })
+  
+      setTotalAmount(sumTotal);
+      setTotalOwed(redLiner);
+      setTotalPaid(sumTotal - redLiner);
+      setTotalDiscount(totalDis);
+    }
+  }
 
   return (
     <>
@@ -89,19 +126,19 @@ export default function Home() {
               <Tbody>
                 <Tr>
                   <Td><strong>Discount:</strong></Td>
-                  <Td textAlign="right">???</Td>
+                  <Td textAlign="right">{convertToDollar(totalDiscount)}</Td>
                 </Tr>
                 <Tr>
                   <Td><strong>Invoice Total:</strong></Td>
-                  <Td textAlign="right">???</Td>
+                  <Td textAlign="right">{convertToDollar(totalAmount)}</Td>
                 </Tr>
                 <Tr>
                   <Td><strong>Total Paid:</strong></Td>
-                  <Td textAlign="right">???</Td>
+                  <Td textAlign="right">{convertToDollar(totalPaid)}</Td>
                 </Tr>
                 <Tr>
                   <Td border="none"><strong>Total Owed:</strong></Td>
-                  <Td border="none" textAlign="right">???</Td>
+                  <Td border="none" textAlign="right">{convertToDollar(totalOwed)}</Td>
                 </Tr>
               </Tbody>
             </Table>
