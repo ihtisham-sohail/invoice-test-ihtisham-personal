@@ -1,5 +1,5 @@
 'use client'
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import {
   Flex,
   Heading,
@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { PageWrapper } from "./components/pageWrapper";
 import { GeneralBox } from "./components/generalBox";
-import { Customer, Invoice } from "@/utils/data-helpers";
+import { Customer, Invoice , LineItem , convertToDollar , dateFormat } from "@/utils/data-helpers";
 
 export default function Home() {
   const [userId, setUserId] = useState('5ac51f7e-81b1-49c6-9c39-78b2d171abd6');
@@ -31,7 +31,7 @@ export default function Home() {
 
         <GeneralBox>
           <TableContainer>
-            <Table fontSize="sm">
+            <Table fontSize="sm" variant="striped" colorScheme="gray">
               <Thead>
                 <Tr>
                   <Th>Invoice #</Th>
@@ -57,8 +57,9 @@ export default function Home() {
             </Table>
           </TableContainer>
         </GeneralBox>
-          <GeneralBox>
-            <Table fontSize="sm">
+        <Flex alignItems="flex-end" flexDirection="column">
+        <GeneralBox>
+            <Table fontSize="sm" variant="striped" colorScheme="gray">
               <Tbody>
                 <Tr>
                   <Td><strong>Discount:</strong></Td>
@@ -79,6 +80,7 @@ export default function Home() {
               </Tbody>
             </Table>
           </GeneralBox>
+        </Flex>
       </PageWrapper>
     </>
   )
