@@ -117,11 +117,11 @@ const { isOpen, onOpen, onClose } = useDisclosure()
             <Table fontSize="sm" variant="striped" colorScheme="gray">
               <Thead>
                 <Tr >
-                  <Th position="sticky" left={0} top={0} zIndex="2" bg="white">Invoice #</Th>
-                  <Th position="sticky" left={0} top={0} zIndex="1" bg="white">Date Due</Th>
-                  <Th position="sticky" left={0} top={0} zIndex="1" bg="white">Date Sent</Th>
-                  <Th position="sticky" left={0} top={0} zIndex="1" bg="white">Amount</Th>
-                  <Th position="sticky" left={0} top={0} zIndex="1" bg="white"></Th>
+                  <Th>Invoice #</Th>
+                  <Th>Date Due</Th>
+                  <Th>Date Sent</Th>
+                  <Th>Amount</Th>
+                  <Th></Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -135,7 +135,7 @@ const { isOpen, onOpen, onClose } = useDisclosure()
                    settled,
                  }) => (
                   <Tr key={id} color={settled ? '':'red'}>
-                    <Td position="sticky" left={0} zIndex="1" bg="white">{number}</Td>
+                    <Td>{number}</Td>
                     <Td>{dateFormat(dateDue)}</Td>
                     <Td>{dateFormat(dateIssued)}</Td>
                     <Td color={discount ? 'green':''}>{totalItems(items)}</Td>
