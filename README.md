@@ -22,7 +22,7 @@ The tech stack is simple, using what we normally use on our projects, [NextJS](h
 
 You are free to add any other additional packages you require and can edit/refactor any of the existing code to complete any of the tasks.
 
-- [ ] The `/api/invoices` is incomplete, please add the following:
+- [x] The `/api/invoices` is incomplete, please add the following:
 
   - [x] Sort the api by invoice number
   - [x] Add a discount of 10% to all invoices that are unpaid and are more than $100 in total (price on the invoice is in cents)
