@@ -10,14 +10,23 @@ import {
   Tr,
   Th,
   Td,
-  TableContainer
+  TableContainer,
+  IconButton,
+  useDisclosure,
 } from "@chakra-ui/react";
+import { DeleteIcon } from '@chakra-ui/icons'
 import { PageWrapper } from "./components/pageWrapper";
 import { GeneralBox } from "./components/generalBox";
+import { DeleteModal } from "./components/deleteModal";
 import { Customer, Invoice , LineItem , convertToDollar , dateFormat } from "@/utils/data-helpers";
 import { fetchCall } from '@/utils/api-helper';
 
 export default function Home() {
+
+  
+const { isOpen, onOpen, onClose } = useDisclosure()
+
+
   const [userId, setUserId] = useState('5ac51f7e-81b1-49c6-9c39-78b2d171abd6');
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [invoices, setInvoices] = useState<Invoice[] | null>(null);
@@ -28,32 +37,35 @@ export default function Home() {
   const [totalDiscount , setTotalDiscount] = useState<number | 0>(0);
 
   useEffect(()=>{
-    setCustomerData();
+    setCustomerInvoiceData();
   },[userId])
 
-  const setCustomerData =  ()=>{
-    console.log('Called setting customer');
-  fetchCall(`/api/findCustomer/${userId}`).then(data=>
+  const setCustomerInvoiceData = () =>{
+    Promise.all([setInvoiceData , setCustomerData]);
+  }
+
+  const setCustomerData = () =>{
+  return fetchCall(`/api/findCustomer/${userId}`).then(data=>
     setCustomer(data)
   );
   }
 
-  useEffect(()=>{
-    if(customer){
-      console.log('Called setting invoices');
-      fetchCall(`/api/invoices/${userId}`).then(data=>
-        setInvoices(data)
-      );
-    }
-
-  },[customer])
+  const setInvoiceData = () =>{
+    return fetchCall(`/api/invoices/${userId}?sortBy=asc`).then(data=>
+      setInvoices(data)
+    );
+  }
 
   useEffect(()=>{
     calcTotals();
   },[invoices]);
 
+  /**
+   * calculating all totals of the invoice list
+   * which includes Total Amount , Total Discount , Total Paid
+   * and Total Owed
+   */
   const calcTotals = () =>{
-    
     if(invoices?.length){
       let sumTotal = 0;
       let redLiner = 0;
@@ -108,7 +120,7 @@ export default function Home() {
                   <Th position="sticky" left={0} top={0} zIndex="1" bg="white">Date Due</Th>
                   <Th position="sticky" left={0} top={0} zIndex="1" bg="white">Date Sent</Th>
                   <Th position="sticky" left={0} top={0} zIndex="1" bg="white">Amount</Th>
-                  <Td position="sticky" left={0} top={0} zIndex="1" bg="white"></Td>
+                  <Th position="sticky" left={0} top={0} zIndex="1" bg="white"></Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -126,6 +138,16 @@ export default function Home() {
                     <Td>{dateFormat(dateDue)}</Td>
                     <Td>{dateFormat(dateIssued)}</Td>
                     <Td color={discount ? 'green':''}>{totalItems(items)}</Td>
+                    <Td>{ settled ? 
+                    <></> 
+                    : 
+                    <IconButton 
+                    onClick={onOpen} 
+                    aria-label='Delete invoice' 
+                    isRound={true} 
+                    colorScheme="red" 
+                    size="sm" 
+                    icon={<DeleteIcon />} />}</Td>
                   </Tr>
                 ))}
               </Tbody>
@@ -157,6 +179,8 @@ export default function Home() {
           </GeneralBox>
         </Flex>
       </PageWrapper>
+      
+      <DeleteModal isOpen={isOpen} onClose={onClose}>Are you sure? You cant undo this action afterwards.</DeleteModal>
     </>
   )
 }
