@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
-import invoiceData from "@/data/invoices.json";
-import { LineItem } from "@/utils/data-helpers";
+import invoiceData from "../../../../data/invoices.json";
+import { LineItem } from "../../../../utils/data-helpers";
 
 interface ParamType {
   id: string;
@@ -20,8 +20,6 @@ function invoiceDsc(a: any, b: any) {
 
 export async function GET(request: NextRequest, context: ContextType) {
   try {
-    const sortByQuery = request.nextUrl.searchParams.get("sortBy");
-
     const userId = context.params.id;
 
     // add any kind of validation for the UUID
@@ -49,6 +47,9 @@ export async function GET(request: NextRequest, context: ContextType) {
     });
 
     // apply sort if given in query params
+
+    const sortByQuery = request?.nextUrl?.searchParams.get("sortBy");
+
     if (sortByQuery && sortByQuery === "asc") {
       data.sort(invoiceAsc);
     } else if (sortByQuery && sortByQuery === "dsc") {
