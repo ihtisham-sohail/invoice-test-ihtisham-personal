@@ -41,17 +41,18 @@ const { isOpen, onOpen, onClose } = useDisclosure()
   },[userId])
 
   const setCustomerInvoiceData = () =>{
-    Promise.all([setInvoiceData , setCustomerData]);
+    setInvoiceData();
+    setCustomerData();
   }
 
-  const setCustomerData = () =>{
-  return fetchCall(`/api/findCustomer/${userId}`).then(data=>
+  const setCustomerData = async () =>{
+  await fetchCall(`/api/findCustomer/${userId}`).then(data=>
     setCustomer(data)
   );
   }
 
-  const setInvoiceData = () =>{
-    return fetchCall(`/api/invoices/${userId}?sortBy=asc`).then(data=>
+  const setInvoiceData = async () =>{
+   await fetchCall(`/api/invoices/${userId}?sortBy=asc`).then(data=>
       setInvoices(data)
     );
   }
