@@ -21,6 +21,7 @@ Below is a list of tasks that we would like you to complete.
 The tech stack is simple, using what we normally use on our projects, [NextJS](https://nextjs.org/docs) and [Chakra](https://chakra-ui.com/docs/components) for the UI.
 
 You are free to add any other additional packages you require and can edit/refactor any of the existing code to complete any of the tasks.
+W
 
 - [x] The `/api/invoices` is incomplete, please add the following:
 
