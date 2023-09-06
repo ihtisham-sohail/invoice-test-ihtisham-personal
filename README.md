@@ -22,6 +22,8 @@ The tech stack is simple, using what we normally use on our projects, [NextJS](h
 
 You are free to add any other additional packages you require and can edit/refactor any of the existing code to complete any of the tasks.
 
+completed!
+
 - [x] The `/api/invoices` is incomplete, please add the following:
 
   - [x] Sort the api by invoice number
