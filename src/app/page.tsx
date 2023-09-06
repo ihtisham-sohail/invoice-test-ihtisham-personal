@@ -46,14 +46,20 @@ const { isOpen, onOpen, onClose } = useDisclosure()
   }
 
   const setCustomerData = async () =>{
-  await fetchCall(`/api/findCustomer/${userId}`).then(data=>
-    setCustomer(data)
-  );
+  await fetchCall(`/api/findCustomer/${userId}`).then((data:Customer)=>{
+    if(data){
+      setCustomer(data)
+    }
+  }
+  )
   }
 
   const setInvoiceData = async () =>{
-   await fetchCall(`/api/invoices/${userId}?sortBy=asc`).then(data=>
-      setInvoices(data)
+   await fetchCall(`/api/invoices/${userId}?sortBy=asc`).then((data:Invoice[])=>{
+    if(data?.length){
+    setInvoices(data)
+   }
+  }
     );
   }
 
